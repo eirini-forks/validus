@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	golang.org/x/net v0.1.0 // indirect
