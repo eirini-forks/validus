@@ -27,7 +27,25 @@ func JSONField(name string, inner validus.Validation) TaggedFieldValidation {
 }
 
 func (v TaggedFieldValidation) Check(value reflect.Value) error {
-	field, ok := value.Type().FieldByName(v.name)
+	if !value.IsValid() {
+		return fmt.Errorf("value is nil")
+	}
+
+	valueType := value.Type()
+	if valueType.Kind() == reflect.Pointer {
+		if value.IsNil() {
+			return fmt.Errorf("value is nil")
+		}
+
+		valueType = valueType.Elem()
+		value = reflect.Indirect(value)
+	}
+
+	if valueType.Kind() != reflect.Struct {
+		return fmt.Errorf("value '%v' is not a struct", value)
+	}
+
+	field, ok := valueType.FieldByName(v.name)
 	if !ok {
 		return fmt.Errorf("no field '%s' in type '%v'", v.name, value.Type())
 	}
